@@ -9,10 +9,16 @@ export const router = createBrowserRouter([
     {
         Component: App,
         path: "/",
-        children: [{
-            Component: About,
-            path: "about"
-        }]
+        children: [
+            {
+                Component: About,
+                path: "about"
+            },
+            {
+                Component: Verify,
+                path: "/verify"
+            }
+        ]
     },
     {
         Component: Login,
@@ -21,10 +27,6 @@ export const router = createBrowserRouter([
     {
         Component: Register,
         path: "/register"
-    },
-    {
-        Component: Verify,
-        path: "/verify"
     }
 
 ])
