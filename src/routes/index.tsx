@@ -12,6 +12,13 @@ import { withAuth } from "@/utils/withAuth";
 import Unauthorized from "@/pages/Unauthorized";
 import { role } from "@/constants/role";
 import type { TRole } from "@/types";
+import Homepage from "@/pages/Homepage";
+import Tours from "@/pages/Tours";
+import TourDetails from "@/pages/TourDetails";
+import Booking from "@/pages/Booking";
+import Success from "@/pages/Payment/Success";
+import Cancel from "@/pages/Payment/Cancel";
+import Fail from "@/pages/Payment/Fail";
 
 export const router = createBrowserRouter([
     {
@@ -19,21 +26,37 @@ export const router = createBrowserRouter([
         path: "/",
         children: [
             {
-                Component: withAuth(About),
+                Component: Homepage,
+                index: true
+            },
+            {
+                Component: About,
                 path: "about"
-            }
+            },
+            {
+                Component: Tours,
+                path: "tours"
+            },
+            {
+                Component: TourDetails,
+                path: "tours/:id"
+            },
+            {
+                Component: withAuth(Booking),
+                path: "booking/:id"
+            },
         ]
     },
     {
-        Component: withAuth(DashboardLayout, role.superAdmin as TRole),
+        Component: withAuth(DashboardLayout,[role.admin as TRole, role.superAdmin as TRole] ),
         path: "/admin",
         children: [
-            {index:true, element: <Navigate to="/admin/analytics"/>},
-          ...generateRoutes(adminSidebarItem)
+            { index: true, element: <Navigate to="/admin/analytics" /> },
+            ...generateRoutes(adminSidebarItem)
         ]
     },
     {
-        Component: withAuth(DashboardLayout,role.user as TRole),
+        Component: withAuth(DashboardLayout, role.user as TRole),
         path: "/user",
         children: [
             ...generateRoutes(userSidebarItem)
@@ -54,6 +77,18 @@ export const router = createBrowserRouter([
     {
         Component: Unauthorized,
         path: "/unauthorized"
+    },
+    {
+        Component: Success,
+        path: "/payment/success"
+    },
+    {
+        Component: Cancel,
+        path: "/payment/cancel"
+    },
+    {
+        Component: Fail,
+        path: "/payment/fail"
     },
 
 ])

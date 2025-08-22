@@ -3,16 +3,24 @@ import type { TRole } from "@/types"
 import type { ComponentType } from "react"
 import { Navigate } from "react-router"
 
-export const withAuth = (Component : ComponentType, requiredRole?: TRole) => {
+export const withAuth = (Component: ComponentType, requiredRole?: TRole | TRole[]) => {
     return function Authrapper() {
         const { data, isLoading } = useUserInfoQuery(undefined)
 
-        if(!isLoading && !data?.data?.email){
-            return <Navigate to="/login"/>
+        if (!isLoading && !data?.data?.email) {
+            return <Navigate to="/login" />
         }
 
-        if(requiredRole && !isLoading && requiredRole !== data?.data?.role){
-            return <Navigate to="/unauthorized"/>
+        if (requiredRole && !isLoading) {
+            if (Array.isArray(requiredRole)) {
+                if (!requiredRole.includes(data?.data?.role)) {
+                    return <Navigate to="/unauthorized" />
+                }
+            } else {
+                if (requiredRole !== data?.data?.role) {
+                    return <Navigate to="/unauthorized" />
+                }
+            }
         }
 
         return <Component />
